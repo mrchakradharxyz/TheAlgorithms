@@ -57,7 +57,7 @@ class SingleLinkedListImpl implements LinkedList {
     }
 
     // Insert data at Pos
-    // list.addAtEnd(15, 2);
+    // list.addAtPos(15, 2);
     public void addAtPos(int data, int pos) {
         if (pos < 0) return;
         if (pos == 0) {
