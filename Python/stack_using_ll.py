@@ -2,7 +2,6 @@
 Stack implementation using singly linked list data structure.
 Provides basic stack operations: push, pop, peek, size, and display.
 """
-
 class Node:
     def __init__(self, data, next=None):
         self.data = data
@@ -76,25 +75,3 @@ def display(head: Node):
         print(current.data, end=" -> ")
         current = current.next
     print("EOL")
-
-"""
-main: Driver function to demonstrate stack operations
-"""
-def main():
-    stack = createNode(0)
-    stack = push(10, stack)
-    stack = push(20, stack)
-    stack = push(30, stack)
-
-    print("Stack contents:")
-    display(stack)
-
-    print("Top element:", peek(stack))
-    print("Stack size:", size(stack))
-
-    stack = pop(stack)
-    print("After pop:")
-    display(stack)
-
-if __name__ == "__main__":
-    main()
