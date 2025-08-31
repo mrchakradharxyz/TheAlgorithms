@@ -1,97 +1,107 @@
-from typing import Any
+from typing import Any, Optional
 
 class Node:
-    def __init__(self, data, prev=None, next=None) -> None:
+    def __init__(self, data: Any, prev: Optional['Node'] = None, next: Optional['Node'] = None):
         self.data = data
         self.prev = prev
         self.next = next
 
-def traverse(node: Node) -> None:
-    cur = node
-    while cur:
-        print(f"{cur.data}",end="<=>")
-        cur = cur.next
-    print("NULL")
+class DoublyLinkedList:
+    def __init__(self):
+        self.head: Optional[Node] = None
 
-def addNodeAtTop(data, node: Node) -> Node:
-    newNode = Node(data)
-    newNode.prev = None
-    newNode.next = node
-    return newNode
+    def traverse(self) -> None:
+        cur = self.head
+        while cur:
+            print(cur.data, end=" <=> ")
+            cur = cur.next
+        print("NULL")
 
-def addNodeATEnd(data, node: Node) -> Node:
-    newNode = Node(data=data)
-    tmp = node
-    while tmp.next:
-        tmp = tmp.next
-    tmp.next = newNode
-    newNode.prev = tmp
-    newNode.next = None
-    return node
+    def traverse_reverse(self) -> None:
+        cur = self.head
+        if not cur:
+            print("NULL")
+            return
+        while cur.next:
+            cur = cur.next
+        while cur:
+            print(cur.data, end=" <=> ")
+            cur = cur.prev
+        print("NULL")
 
-def addNodeAtPos(data, p1, p2, node: Node) -> Node:
-    cur: Any = node
-    while cur:
-        if cur.data == p1 and cur.next is not None and cur.next.data == p2:
-            newNode = Node(data=data)
-            newNode.next = cur.next
-            newNode.prev = cur
-            cur.next.prev = newNode
-            cur.next = newNode
-            return node
-        cur = cur.next
-    return node
+    def add_at_top(self, data: Any) -> None:
+        newNode = Node(data, prev=None, next=self.head)
+        if self.head:
+            self.head.prev = newNode
+        self.head = newNode
 
-def deleteAtTop(node) -> Node:
-    node = node.next
-    return node
+    def add_at_end(self, data: Any) -> None:
+        if not self.head:
+            self.head = Node(data)
+            return
+        cur = self.head
+        while cur.next:
+            cur = cur.next
+        newNode = Node(data, prev=cur, next=None)
+        cur.next = newNode
 
-def deleteAtEnd(node: Node) -> Node:
+    def insert_after(self, after_value: Any, data: Any) -> None:
+        cur = self.head
+        while cur:
+            if cur.data == after_value:
+                newNode = Node(data, prev=cur, next=cur.next)
+                if cur.next:
+                    cur.next.prev = newNode
+                cur.next = newNode
+                return
+            cur = cur.next
+        print(f"Value {after_value} not found")
 
-    tmp: Any = node
-    while tmp.next:
-        tmp = tmp.next
-    tmp.prev.next = None
+    def delete_at_top(self) -> None:
+        if not self.head:
+            return
+        tmp = self.head
+        self.head = tmp.next
+        if self.head:
+            self.head.prev = None
+        del tmp  # free node
 
-    tmp.prev = None
-    return node
+    def delete_at_end(self) -> None:
+        if not self.head:
+            return
+        if not self.head.next:
+            del self.head
+            self.head = None
+            return
+        cur = self.head
+        while cur.next:
+            cur = cur.next
+        cur.prev.next = None
+        del cur
 
-def deleteAtPos(data, node: Node) -> Node:
-    tmp: Any = node
-    while tmp is not None:
-        if tmp.data == data:
-            if tmp.prev is not None:
-                tmp.prev.next = tmp.next
-            else:
-                node = tmp.next
-            if tmp.next is not None:
-                tmp.next.prev = tmp.prev
-            return node
-        tmp = tmp.next
-    return node
+    def delete_by_value(self, data: Any) -> None:
+        cur = self.head
+        while cur:
+            if cur.data == data:
+                if cur.prev:
+                    cur.prev.next = cur.next
+                else:
+                    self.head = cur.next
+                if cur.next:
+                    cur.next.prev = cur.prev
+                del cur
+                return
+            cur = cur.next
+        print(f"Value {data} not found")
 
-
-def main():
-    n1 = Node(10)
-    n2 = Node(20, prev=n1)
-    n3 = Node(30, prev=n2)
-    n1.next, n2.next = n2, n3
-    updated = addNodeAtTop(1, n1)
-    traverse(updated)
-    updated = addNodeATEnd(40,n1)
-    traverse(updated)
-    updated = addNodeAtPos(15,10,20,n1)
-    traverse(updated)
-    updated = deleteAtTop(updated)
-    traverse(updated)
-    updated = deleteAtEnd(updated)
-    traverse(updated)
-    updated = deleteAtPos(30,updated)
-    traverse(updated)
-    updated = addNodeAtTop("Data", updated)
-    traverse(updated)
-    updated = deleteAtTop(updated)
-    traverse(updated)
-
-if __name__ == "__main__":
-    main()
+    def free_all(self) -> None:
+        """ Free the entire list """
+        cur = self.head
+        while cur:
+            nxt = cur.next
+            cur.prev = None
+            cur.next = None
+            del cur
+            cur = nxt
+        self.head = None
+        print("List freed completely.")
