@@ -16,61 +16,66 @@ def add_at_end(data, node):
     new_node = Node(data)
     if not node:
         return new_node
-    tmp = node
-    while tmp.next:
-        tmp = tmp.next
-    tmp.next = new_node
+    cur = node
+    while cur.next:
+        cur = cur.next
+    cur.next = new_node
     return node
 
 
 def add_at_top(data, node):
-    new_node = Node(data)
-    new_node.next = node
-    return new_node
+    return Node(data, node)
 
 
-def add_at_pos(data, pos_data, node):
-    tmp = node
-    while tmp:
-        if tmp.data == pos_data:
-            new_node = Node(data)
-            new_node.next = tmp.next
-            tmp.next = new_node
-            return node
-        tmp = tmp.next
+def add_at_pos(data, pos, node):
+    """Insert at index `pos` (0-based)."""
+    if pos == 0:
+        return add_at_top(data, node)
+
+    cur = node
+    idx = 0
+    while cur and idx < pos - 1:
+        cur = cur.next
+        idx += 1
+
+    if not cur:
+        print(f"Position {pos} out of range")
+        return node
+
+    cur.next = Node(data, cur.next)
     return node
 
 
 def delete_at_top(node):
-    if not node:
-        return None
-    return node.next
+    return node.next if node else None
 
 
 def delete_at_end(node):
-    if not node:
+    if not node or not node.next:
         return None
-    if not node.next:
-        return None
-    tmp = node
-    while tmp.next.next:
-        tmp = tmp.next
-    tmp.next = None
+    cur = node
+    while cur.next and cur.next.next:
+        cur = cur.next
+    cur.next = None
     return node
 
 
-def delete_at_pos(pos_data, node):
+def delete_at_pos(pos, node):
     if not node:
         return None
-    if node.data == pos_data:
+    if pos == 0:
         return node.next
-    tmp = node
-    while tmp.next:
-        if tmp.next.data == pos_data:
-            tmp.next = tmp.next.next
-            return node
-        tmp = tmp.next
-    print(f"Node with data {pos_data} not found")
+
+    cur = node
+    idx = 0
+    while cur.next and idx < pos - 1:
+        cur = cur.next
+        idx += 1
+
+    if cur.next:
+        cur.next = cur.next.next
+    else:
+        print(f"Position {pos} out of range")
     return node
 
 
