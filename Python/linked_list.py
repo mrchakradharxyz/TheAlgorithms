@@ -75,5 +75,8 @@ def delete_at_pos(pos_data, node):
 
 
 def free_all(node):
-    node = None
-    return node
+    while node:
+        tmp = node.next
+        node.next = None
+        node = tmp
+    return None
