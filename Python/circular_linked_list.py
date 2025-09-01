@@ -1,5 +1,5 @@
 """
-Circular Singly Linked List Implementation
+Circular Singly Linked List Implementation (Safe Version)
 """
 
 class Node:
@@ -10,41 +10,46 @@ class Node:
 def createNode(data):
     return Node(data)
 
+
 def insertAtTop(data, head):
     new_node = createNode(data)
-    if head is None:
+    if head is None:  # empty list
         new_node.next = new_node
         return new_node
-    else:
-        cur = head
-        while cur.next != head:
-            cur = cur.next
-        cur.next = new_node
-        new_node.next = head
-        return new_node  # new head
+    cur = head
+    while cur.next != head:
+        cur = cur.next
+
+    cur.next = new_node
+    new_node.next = head
+    return new_node
 
 def insertAtEnd(data, head):
     new_node = createNode(data)
     if head is None:
         new_node.next = new_node
         return new_node
-    else:
-        cur = head
-        while cur.next != head:
-            cur = cur.next
-        cur.next = new_node
-        new_node.next = head
-        return head  # head remains same
+
+    cur = head
+    while cur.next != head:
+        cur = cur.next
+
+    cur.next = new_node
+    new_node.next = head
+    return head
 
 def deleteAtTop(head):
     if head is None:
         print("List is empty")
         return None
+
     if head.next == head:
-        return None  # only one node
+        return None
+
     cur = head
     while cur.next != head:
         cur = cur.next
+
     cur.next = head.next
     return head.next  # new head
 
@@ -52,13 +57,16 @@ def deleteAtEnd(head):
     if head is None:
         print("List is empty")
         return None
+
     if head.next == head:
         return None
+
     cur = head
     prev = None
     while cur.next != head:
         prev = cur
         cur = cur.next
+
     prev.next = head
     return head
 
@@ -66,6 +74,8 @@ def deleteByValue(head, value):
     if head is None:
         print("List is empty")
         return None
+
+    # if head node matches
     if head.data == value:
         return deleteAtTop(head)
 
@@ -83,11 +93,13 @@ def free_all(head):
     if head is None:
         print("List is already empty")
         return None
+
     cur = head.next
     while cur != head:
         nxt = cur.next
         cur.next = None
         cur = nxt
+
     head.next = None
     print("All nodes freed")
     return None
